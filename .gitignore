@@ -1,0 +1,26 @@
+# Entornos virtuales
+envProyecto/
+.venv/
+venv/
+ENV/
+
+# Caches y compilados
+__pycache__/
+*.py[cod]
+*.so
+
+# Notebooks temporales
+.ipynb_checkpoints/
+
+# Configuración local / variables
+.env
+*.log
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de distribución
+*.egg-info/
+dist/
+build/
