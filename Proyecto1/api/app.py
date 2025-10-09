@@ -25,6 +25,8 @@ class PredictOut(BaseModel):
     confianza: float
 
 class RetrainIn(BaseModel):
+    modelo_path: Optional[str] = None
+    # Textos y labels deben tener la misma longitud
     textos: List[str]
     labels: List[int]
     
@@ -65,3 +67,5 @@ def predict(body: PredictIn):
     conf = p.max(axis=1)
 
     return [PredictOut(texto=t, prediccion=int(lbl), confianza=float(c)) for t, lbl, c in zip(body.textos, y, conf)]
+
+
