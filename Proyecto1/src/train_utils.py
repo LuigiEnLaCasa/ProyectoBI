@@ -5,7 +5,7 @@ from src.pipeline import entrenar_modelo, guardar_modelo
 
 
 # ----------------------------------------------------------------------
-# Importación de archivos y textos
+# Este archivo sirve para exponer herramientas que permitan entrenar en train.py
 # ----------------------------------------------------------------------
 
 # Transforma un excel o csv en un dataframe
@@ -56,7 +56,7 @@ def retrain_with_samples(base_file_path,text_col,label_col,nuevos_textos,nuevos_
     if len(nuevos_labels)!= len(nuevos_textos):
         raise ValueError("textos y labels deben tener la misma longitud.")
     
-    df_base = pd.read_file(base_file_path)
+    df_base = read_file(base_file_path)
     X_base,Y_base = prepare_data(df_base,text_col,label_col)
 
     X = X_base + list(map(str, nuevos_textos))
@@ -64,7 +64,7 @@ def retrain_with_samples(base_file_path,text_col,label_col,nuevos_textos,nuevos_
 
     pipe, best_params, best_score = entrenar_modelo(X, Y)
     meta = { "dataset_base": base_file_path,"text_col": text_col,"label_col": label_col,"n_base": len(Y_base),"n_new": len(nuevos_labels),"n_total": len(Y), "params": best_params,"score": {"f1_macro_cv": float(best_score)}}
-    ruta = guardar_modelo(pipe,metadata = meta)
+    ruta = guardar_modelo(pipe,ruta_base="models/retrained/model_nb",metadata = meta)
     return ruta,meta
 
 # Esto te permite cargar un CSV o un excel para re-entrenar los modelos
