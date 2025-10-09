@@ -95,18 +95,6 @@ def preprocesar_varios(textos):
 
 
 
-# Caso 1: texto normal
-texto1 = "¡La Educación pública en Colombia es esencial para la igualdad!"
-print("Entrada 1:", texto1)
-print("Salida 1:", preprocesar_texto(texto1))
-print("-" * 50)
-
-# Caso 2: texto con acentos, números y símbolos
-texto2 = "El 50% de los niños aún no tienen acceso a salud básica - ¡urgente!"
-print("Entrada 2:", texto2)
-print("Salida 2:", preprocesar_texto(texto2))
-
-
 # ----------------------------------------------------------------------
 # Masticar para el pipeline de sklearn
 # ----------------------------------------------------------------------

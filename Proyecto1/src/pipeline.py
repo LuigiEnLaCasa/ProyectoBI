@@ -4,7 +4,6 @@ Pipeline de procesamiento y clasificación de texto:
 - GridSearch para optimizar hiperparámetros
 - Funciones para entrenar, predecir, guardar y cargar modelos
 
-
 """
 
 # ----------------------------------------------------------------------
@@ -30,7 +29,7 @@ import numpy as np
 
 
 def construir_pipeline(alpha=0.1):
-    """Construye el pipeline completo: limpieza → vectorización → modelo"""
+    """Construye el pipeline completo: limpieza, vectorización , modelo"""
     return Pipeline([
         ("preprocesamiento", PreprocesadorTexto()), 
         ("vectorizador", CountVectorizer(token_pattern=r"(?u)\b[a-z]{2,}\b", min_df=3, max_df=0.90, ngram_range=(1,2))),
@@ -47,7 +46,7 @@ def entrenar_con_grid(X, y):
 
 
 # ----------------------------------------------------------------------
-# Funciones funcionales jajaj
+# Funciones funcionales jajaj. (POSIBLE FUENTE DE ERRORES: GUARDAR EL MODELO Y VISUALIZARLO.)
 # ----------------------------------------------------------------------
 
 # Permitirá meterle datos para entrenar el modelo
