@@ -1,3 +1,12 @@
+from fastapi import APIRouter
+from typing import List, Optional
+from pydantic import BaseModel
+from src.pipeline import predecir, probabilidades, listar_modelos, cargar_modelo
+
+router = APIRouter(prefix="/predict", tags=["Predicción"])
+#-------------
+# Moldes 
+#-------------
 
 # Moldes de entrada y salida 
 class PredictIn(BaseModel):
@@ -8,26 +17,33 @@ class PredictOut(BaseModel):
     texto: str
     prediccion: int
     confianza: float
-    
+
+
+#-------------
+# Endpoints 
+#-------------
+
 # Mostrar los modelos de la carpeta /models
-@app.get("/models")
+@router.get("/models")
 def models():
     return {"modelos": listar_modelos()}
 
-# Hacer una predicción con el model elegido (path)
-@app.post("/predict", response_model=List[PredictOut])
+@router.post("/", response_model=List[PredictOut])
 def predict(body: PredictIn):
     modelos = listar_modelos()
     if not modelos:
         # no hay .pkl guardados aún
         return [PredictOut(texto=t, prediccion=-1, confianza=0.0) for t in body.textos]
 
-    # usa el que indiquen o el último listado
     modelo_path = body.modelo_path or modelos[-1]
-    pipe = cargar_modelo(modelo_path)
+    obj = cargar_modelo(modelo_path)
+    pipe = obj["model"]  # recuerda: cargar_modelo devuelve {'model': pipeline, 'metadata': {...}}
 
     y = predecir(pipe, body.textos)
     p = probabilidades(pipe, body.textos)
     conf = p.max(axis=1)
 
-    return [PredictOut(texto=t, prediccion=int(lbl), confianza=float(c)) for t, lbl, c in zip(body.textos, y, conf)]
+    return [
+        PredictOut(texto=t, prediccion=int(lbl), confianza=float(c))
+        for t, lbl, c in zip(body.textos, y, conf)
+    ]
