@@ -18,7 +18,6 @@ class PredictOut(BaseModel):
     prediccion: int
     confianza: float
 
-
 #-------------
 # Endpoints 
 #-------------
