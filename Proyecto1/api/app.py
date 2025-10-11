@@ -1,6 +1,6 @@
 # api/app.py
 from fastapi import FastAPI
-from api.routes import predict, train, retrain, files
+from api.routes import predict, train, retrain, files, evaluate
 
 app = FastAPI(title="ODS Classifier API", version="2.0.0")
 
@@ -13,6 +13,8 @@ app.include_router(train.router)
 app.include_router(retrain.router)  
 # /predict/*
 app.include_router(predict.router)  
+# /evaluate/*
+app.include_router(evaluate.router) 
 
 #---------------
 # ENDPOINTS 
