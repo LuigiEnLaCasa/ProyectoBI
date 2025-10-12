@@ -8,10 +8,14 @@ import os
 router = APIRouter(prefix="/files", tags=["Archivos"])
 
 DATA_DIRECTORY = "data"
+MODELS_DIRECTORY = "models"
 ALLOWED_EXT = {".csv", ".xlsx", ".xls"}
 
 def ensure_data_dir():
     os.makedirs(DATA_DIRECTORY, exist_ok=True)
+
+def ensure_models_dir():
+    os.makedirs(MODELS_DIRECTORY, exist_ok=True)
 
 def is_allowed(filename: str) -> bool:
     return os.path.splitext(filename)[1].lower() in ALLOWED_EXT
@@ -28,8 +32,19 @@ def list_files() :
     for fname in os.listdir(DATA_DIRECTORY):
         path = os.path.join(DATA_DIRECTORY, fname)
         if os.path.isfile(path) and is_allowed(fname):
-            files.append(path)  # ej: "data/mi_dataset.xlsx"
+            files.append(path) 
     return {"archivos": files}
+
+# Listar modelos en la carpeta /models
+@router.get("/models")
+def list_models():
+    ensure_models_dir()
+    modelos = []
+    for fname in os.listdir(MODELS_DIRECTORY):
+        path = os.path.join(MODELS_DIRECTORY, fname)
+        if os.path.isfile(path) and fname.endswith(".pkl"):
+            modelos.append(fname)
+    return {"modelos": modelos}
 
 #Subir archivos a la carpeta /data
 @router.post("/upload")
