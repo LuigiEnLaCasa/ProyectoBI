@@ -17,7 +17,7 @@ class EvalOut(BaseModel):
 
 class EvalIn(BaseModel):
     model_name: str
-    file_name: str
+    test_file_name: str
     text_col: str
     label_col: str
 
@@ -27,7 +27,7 @@ class EvalIn(BaseModel):
 def evaluate_from_file(body: EvalIn):
     try:
         res: Dict = evaluate_model_on_file(
-            body.model_name, body.file_name, body.text_col, body.label_col
+            body.model_name, body.test_file_name, body.text_col, body.label_col
         )
         return res
     except Exception as e:
