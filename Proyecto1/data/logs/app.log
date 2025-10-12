@@ -1,0 +1,11 @@
+2025-10-11 23:40:17,709 INFO api GET /files/models REQ=<empty>
+2025-10-11 23:40:17,710 INFO api GET /files/models → 200 | 1.62ms RESP={"modelos":["model_nb_etapa1.pkl"]}
+2025-10-11 23:40:36,672 INFO api GET /predict/models REQ=<empty>
+2025-10-11 23:40:36,674 INFO api GET /predict/models → 200 | 2.04ms RESP={"modelos":["models/model_nb_etapa1.pkl"]}
+2025-10-11 23:42:38,239 INFO api POST /evaluate/from-file REQ={
+  "model_name": "model_nb_etapa1.pkl",
+  "test_file_name": "Datos_etapa 2.xlsx",
+  "text_col": "textos",
+  "label_col": "labels"
+}
+2025-10-11 23:42:38,557 INFO api POST /evaluate/from-file → 200 | 317.82ms RESP={"n_samples":99,"accuracy":0.9090909090909091,"precision_macro":0.9261904761904761,"recall_macro":0.8959763750461424,"f1_macro":0.9063501891984864,"f1_micro":0.9090909090909091,"f1_weighted":0.9089053590601577}
