@@ -2091,3 +2091,9 @@
 2025-10-13 17:33:31,078 INFO api POST /predict/ → 200 | 460.65ms RESP=[{"texto":"El rector, que es el representante local del Ministerio de Educación, tiene la responsabilidad principal de procesar la evaluación. A pesar de esta centralización, el sistema francés se basa en gran medida en el principio de participación y, por lo tanto, los docentes están involucrados en todos los procesos (INCA France, 2008). Aunque existían diferencias entre los procedimientos de evaluación en los Länder alemanes, la única herramienta de verificación era la recopilación de algunos documentos de muestra para la verificación central. A estas alturas, sin embargo, la mayoría de los Länder han introducido exámenes centrales hasta cierto punto.","prediccion":4,"confianza":1.0},{"texto":"Tenga en cuenta que todos los programas antipobreza tienen condiciones, incluso aquellos caracterizados como 'incondicionales'. Nuestro enfoque está en las condiciones de comportamiento vinculadas a los programas antipobreza. Las condiciones más utilizadas son aquellas que incentivan la creaci... <truncated 109035 chars>
 2025-10-13 17:33:31,536 INFO api GET /files/models REQ=<empty>
 2025-10-13 17:33:31,539 INFO api GET /files/models → 200 | 2.95ms RESP={"modelos":["model_nb_etapa1.pkl","model_nb_etapa2.pkl","retrained/model_nb_2025-10-13_17-02-33.pkl","retrained/model_nb_2025-10-13_17-09-41.pkl"]}
+2025-10-13 17:50:39,500 INFO api GET /health
+2025-10-13 17:50:39,503 INFO api GET /health → 200 | 2.8ms
+2025-10-13 17:50:39,527 INFO api GET /files/models REQ=<empty>
+2025-10-13 17:50:39,530 INFO api GET /files/models → 200 | 3.48ms RESP={"modelos":["model_nb_etapa1.pkl","model_nb_etapa2.pkl"]}
+2025-10-13 17:50:39,551 INFO api GET /files/models REQ=<empty>
+2025-10-13 17:50:39,553 INFO api GET /files/models → 200 | 2.92ms RESP={"modelos":["model_nb_etapa1.pkl","model_nb_etapa2.pkl"]}
