@@ -15,7 +15,12 @@ DATA_TEST    = os.path.join(DATA_DIR, "test")
 
 # La idea es cargar un modelo .pkl con un archivo csv o excel. para evaluar métricas de rendimiento. 
 def evaluate_model_on_file(model_name,file_name,text_col, label_col):
-    model_path = os.path.join(MODELS_DIR, model_name)
+    # Manejar rutas con subcarpetas (ej: retrained/model_nb_2025-10-13.pkl)
+    if model_name.endswith('.pkl'):
+        model_path = os.path.join(MODELS_DIR, model_name)
+    else:
+        model_path = os.path.join(MODELS_DIR, f"{model_name}.pkl")
+    
     bundle = cargar_modelo(model_path)
     
     pipe = bundle["model"]

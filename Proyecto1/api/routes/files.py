@@ -40,10 +40,23 @@ def list_files() :
 def list_models():
     ensure_models_dir()
     modelos = []
+    
+    # Buscar archivos .pkl en la carpeta models/
     for fname in os.listdir(MODELS_DIRECTORY):
         path = os.path.join(MODELS_DIRECTORY, fname)
         if os.path.isfile(path) and fname.endswith(".pkl"):
             modelos.append(fname)
+    
+    # Buscar archivos .pkl en subcarpetas (como retrained/)
+    for root, dirs, files in os.walk(MODELS_DIRECTORY):
+        for file in files:
+            if file.endswith(".pkl"):
+                # Obtener la ruta relativa desde models/
+                rel_path = os.path.relpath(os.path.join(root, file), MODELS_DIRECTORY)
+                # Solo agregar si no está ya en la lista (evitar duplicados)
+                if rel_path not in modelos and file not in modelos:
+                    modelos.append(rel_path.replace("\\", "/"))  # Normalizar separadores
+    
     return {"modelos": modelos}
 
 #Subir archivos a la carpeta /data
