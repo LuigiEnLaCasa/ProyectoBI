@@ -33,9 +33,9 @@ def construir_pipeline(alpha=0.1):
 
 def entrenar_modelo(X, y):
     pipe = construir_pipeline()
-    params = {"clasificador__alpha": [0.05, 0.1, 0.3, 0.5, 1.0], "vectorizador__min_df": [2,3,5], "vectorizador__max_df": [0.8,0.9],}
+    params = {"clasificador__alpha": [0.05, 0.1, 0.3, 0.5, 1.0],}
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-    gs = GridSearchCV(pipe, params, scoring="f1_macro", cv=cv, n_jobs=-1, refit=True)
+    gs = GridSearchCV(pipe, params, scoring="f1_macro", cv=cv, n_jobs= 1, refit="f1_macro")
     gs.fit(X, y)
     return gs.best_estimator_, gs.best_params_, gs.best_score_
 
