@@ -559,12 +559,8 @@ def main():
                             elif dataset_choice == "dataset_rapido":
                                 st.warning("**Solo para Pruebas**: Este dataset pequeño es únicamente para verificar funcionalidad, no para uso en producción.")
                             
-                            # Mostrar información del dataset seleccionado
-                            col_dataset_info1, col_dataset_info2 = st.columns(2)
-                            with col_dataset_info1:
-                                st.metric("Ejemplos base", f"{selected_training_dataset['examples']:,}")
-                            with col_dataset_info2:
-                                st.metric("Tiempo estimado", selected_training_dataset['time_estimate'])
+                            # Mostrar información del dataset seleccionado (sin columnas anidadas)
+                            st.write(f"**Ejemplos base:** {selected_training_dataset['examples']:,} | **Tiempo estimado:** {selected_training_dataset['time_estimate']}")
                             
                             st.caption(f"{selected_training_dataset['description']}")
                             
@@ -662,134 +658,107 @@ def main():
                                     # Nombre del modelo (solo la parte final)
                                     model_name = model_path.split('/')[-1] if model_path != 'N/A' else 'N/A'
                                     
-                                    # Métricas principales organizadas
+                                    # Métricas principales organizadas (sin columnas anidadas)
                                     st.subheader("Métricas del Nuevo Modelo")
-                                    col_m1, col_m2, col_m3, col_m4 = st.columns(4)
                                     
-                                    with col_m1:
-                                        st.metric(" Nuevo Modelo", model_name[:15] + "..." if len(model_name) > 15 else model_name)
+                                    # Información del modelo
+                                    st.write(f"**🤖 Nuevo Modelo:** {model_name[:25] + '...' if len(model_name) > 25 else model_name}")
                                     
-                                    with col_m2:
-                                        base_examples = metadata.get('n_base', 'N/A')
-                                        st.metric(" Ejemplos Base", f"{base_examples:,}" if base_examples != 'N/A' else base_examples)
+                                    # Métricas en formato simple
+                                    base_examples = metadata.get('n_base', 'N/A')
+                                    total_examples = metadata.get('n_total', metadata.get('n_samples', 'N/A'))
                                     
-                                    with col_m3:
-                                        # F1-Score del cross-validation con mejor interpretación
-                                        score_info = metadata.get('score', {})
-                                        f1_cv = score_info.get('f1_macro_cv', 0)
-                                        
-                                        if f1_cv >= 0.9:
-                                            st.metric("🎯 F1-Score (CV)", f"{f1_cv:.3f}", delta="Excelente", delta_color="normal")
-                                        elif f1_cv >= 0.8:
-                                            st.metric("🎯 F1-Score (CV)", f"{f1_cv:.3f}", delta="Muy Bueno", delta_color="normal")
-                                        elif f1_cv >= 0.7:
-                                            st.metric("🎯 F1-Score (CV)", f"{f1_cv:.3f}", delta="Bueno", delta_color="normal")
-                                        else:
-                                            st.metric("🎯 F1-Score (CV)", f"{f1_cv:.3f}", delta="Mejorable", delta_color="inverse")
+                                    st.write(f"**📊 Ejemplos Base:** {base_examples:,}" if base_examples != 'N/A' else f"**📊 Ejemplos Base:** {base_examples}")
+                                    st.write(f"**📈 Total Ejemplos:** {total_examples:,}" if total_examples != 'N/A' else f"**📈 Total Ejemplos:** {total_examples}")
                                     
-                                    with col_m4:
-                                        total_examples = metadata.get('n_total', metadata.get('n_samples', 'N/A'))
-                                        st.metric("� Total Ejemplos", f"{total_examples:,}" if total_examples != 'N/A' else total_examples)
+                                    # F1-Score con interpretación
+                                    score_info = metadata.get('score', {})
+                                    f1_cv = score_info.get('f1_macro_cv', 0)
                                     
-                                    # SEGUNDA FILA DE MÉTRICAS ADICIONALES
-                                    col_m5, col_m6, col_m7, col_m8 = st.columns(4)
+                                    if f1_cv >= 0.9:
+                                        st.write(f"**🎯 F1-Score (CV):** {f1_cv:.3f} - ✅ Excelente")
+                                    elif f1_cv >= 0.8:
+                                        st.write(f"**🎯 F1-Score (CV):** {f1_cv:.3f} - ✅ Muy Bueno")
+                                    elif f1_cv >= 0.7:
+                                        st.write(f"**🎯 F1-Score (CV):** {f1_cv:.3f} - ✅ Bueno")
+                                    else:
+                                        st.write(f"**🎯 F1-Score (CV):** {f1_cv:.3f} - ⚠️ Mejorable")
                                     
-                                    with col_m5:
-                                        # Ejemplos base vs nuevos
-                                        base_examples = metadata.get('n_base', 'N/A')
-                                        new_examples = metadata.get('n_new', len(texts))
-                                        st.metric(" Ejemplos Base", base_examples)
-                                        st.metric(" Ejemplos Nuevos", new_examples)
-                                    
-                                    
-                                    # MÉTRICAS ADICIONALES MEJORADAS
+                                    # Información adicional de entrenamiento (sin columnas anidadas)
                                     st.markdown("---")
-                                    col_extra1, col_extra2, col_extra3 = st.columns(3)
                                     
-                                    with col_extra1:
-                                        # F1-Score con interpretación visual
-                                        score_info = metadata.get('score', {})
-                                        f1_cv = score_info.get('f1_macro_cv', 0)
-                                        
-                                        if f1_cv >= 0.9:
-                                            st.metric("🎯 F1-Score (CV)", f"{f1_cv:.3f}", delta="Excelente ⭐", delta_color="normal")
-                                        elif f1_cv >= 0.8:
-                                            st.metric("🎯 F1-Score (CV)", f"{f1_cv:.3f}", delta="Muy Bueno ✨", delta_color="normal")
-                                        elif f1_cv >= 0.7:
-                                            st.metric("🎯 F1-Score (CV)", f"{f1_cv:.3f}", delta="Bueno ✅", delta_color="normal")
-                                        else:
-                                            st.metric("🎯 F1-Score (CV)", f"{f1_cv:.3f}", delta="Mejorable ⚠️", delta_color="inverse")
+                                    # Ejemplos base vs nuevos
+                                    base_examples = metadata.get('n_base', 'N/A')
+                                    new_examples = metadata.get('n_new', len(texts))
+                                    st.write(f"**🔢 Ejemplos Base:** {base_examples}")
+                                    st.write(f"**🆕 Ejemplos Nuevos:** {new_examples}")
                                     
-                                    with col_extra2:
-                                        # Parámetros del modelo
-                                        params = metadata.get('params', {})
-                                        alpha = params.get('clasificador__alpha', 'N/A')
-                                        if isinstance(alpha, (int, float)):
-                                            st.metric("⚙️ Alpha (NB)", f"{alpha:.4f}")
-                                        else:
-                                            st.metric("⚙️ Alpha (NB)", str(alpha))
                                     
-                                    with col_extra3:
-                                        # Calidad general del modelo
-                                        if f1_cv >= 0.85:
-                                            st.success("🟢 Modelo de Alta Calidad")
-                                        elif f1_cv >= 0.75:
-                                            st.info("🔵 Modelo de Buena Calidad") 
-                                        elif f1_cv >= 0.65:
-                                            st.warning("🟡 Modelo Aceptable")
-                                        else:
-                                            st.error("🔴 Modelo Necesita Mejoras")
+                                    # Métricas adicionales (sin columnas anidadas)
+                                    st.markdown("---")
+                                    
+                                    # Parámetros del modelo
+                                    params = metadata.get('params', {})
+                                    alpha = params.get('clasificador__alpha', 'N/A')
+                                    if isinstance(alpha, (int, float)):
+                                        st.write(f"**⚙️ Alpha (NB):** {alpha:.4f}")
+                                    else:
+                                        st.write(f"**⚙️ Alpha (NB):** {str(alpha)}")
+                                    
+                                    # Calidad general del modelo
+                                    if f1_cv >= 0.85:
+                                        st.success("🟢 Modelo de Alta Calidad")
+                                    elif f1_cv >= 0.75:
+                                        st.info("🔵 Modelo de Buena Calidad") 
+                                    elif f1_cv >= 0.65:
+                                        st.warning("🟡 Modelo Aceptable")
+                                    else:
+                                        st.error("🔴 Modelo Necesita Mejoras")
                                     
                                     # Información adicional
                                     st.subheader("📋 Detalles del Entrenamiento")
                                     
-                                    col_detail1, col_detail2 = st.columns(2)
-                                    with col_detail1:
-                                        st.info(f"""
-                                        **📂 Dataset Base:** {metadata.get('dataset_base', 'N/A')}  
-                                        **📝 Columna Texto:** {metadata.get('text_col', 'N/A')}  
-                                        **🏷️ Columna Label:** {metadata.get('label_col', 'N/A')}  
-                                        **📊 Ejemplos Base:** {metadata.get('n_base', 'N/A')} (dataset original)
-                                        """)
+                                    # Detalles del entrenamiento (sin columnas anidadas)
+                                    st.info(f"""
+                                    **📂 Dataset Base:** {metadata.get('dataset_base', 'N/A')}  
+                                    **📝 Columna Texto:** {metadata.get('text_col', 'N/A')}  
+                                    **🏷️ Columna Label:** {metadata.get('label_col', 'N/A')}  
+                                    **📊 Ejemplos Base:** {metadata.get('n_base', 'N/A')} (dataset original)
+                                    """)
                                     
-                                    with col_detail2:
-                                        # Gráfico de distribuc
-                                        # ión de ODS
-                                        if len(ods_distribution) > 1:
-                                            import plotly.express as px
-                                            
-                                            ods_names = [f"ODS {k}" for k in ods_distribution.keys()]
-                                            ods_counts = list(ods_distribution.values())
-                                            
-                                            fig_dist = px.pie(
-                                                values=ods_counts,
-                                                names=ods_names,
-                                                title="Distribución de Nuevos Ejemplos"
-                                            )
-                                            fig_dist.update_traces(textinfo='label+value')
-                                            st.plotly_chart(fig_dist, use_container_width=True)
-                                        else:
-                                            st.info("**Distribución de Nuevos Ejemplos:**")
-                                            for ods, count in ods_distribution.items():
-                                                st.write(f"• ODS {ods} ({ODS_MAPPING[ods]}): {count} ejemplos")
+                                    # Gráfico de distribución de ODS
+                                    if len(ods_distribution) > 1:
+                                        import plotly.express as px
+                                        
+                                        ods_names = [f"ODS {k}" for k in ods_distribution.keys()]
+                                        ods_counts = list(ods_distribution.values())
+                                        
+                                        fig_dist = px.pie(
+                                            values=ods_counts,
+                                            names=ods_names,
+                                            title="Distribución de Nuevos Ejemplos"
+                                        )
+                                        fig_dist.update_traces(textinfo='label+value')
+                                        st.plotly_chart(fig_dist, use_container_width=True)
+                                    else:
+                                        st.info("**Distribución de Nuevos Ejemplos:**")
+                                        for ods, count in ods_distribution.items():
+                                            st.write(f"• ODS {ods} ({ODS_MAPPING[ods]}): {count} ejemplos")
                                     
                                     # Evaluar el modelo recién entrenado (opcional)
                                     st.subheader("Evaluación del Nuevo Modelo")
                                     
-                                    col_eval1, col_eval2 = st.columns(2)
+                                    # Información de métricas (sin columnas anidadas)
+                                    st.info("""
+                                    **Interpretación de Métricas:**
                                     
+                                    • **Accuracy**: % de predicciones correctas  
+                                    • **Precision**: De las predicciones positivas, % correctas  
+                                    • **Recall**: % de casos positivos identificados  
+                                    • **F1-Score**: Balance entre precisión y recall  
                                     
-                                    with col_eval2:
-                                        st.info("""
-                                        **Interpretación de Métricas:**
-                                        
-                                        • **Accuracy**: % de predicciones correctas  
-                                        • **Precision**: De las predicciones positivas, % correctas  
-                                        • **Recall**: % de casos positivos identificados  
-                                        • **F1-Score**: Balance entre precisión y recall  
-                                        
-                                        **🎯 Valores objetivo:** > 0.7 es bueno, > 0.8 es excelente
-                                        """)
+                                    **🎯 Valores objetivo:** > 0.7 es bueno, > 0.8 es excelente
+                                    """)
                                 
                                 # Limpiar ejemplos de entrenamiento
                                 st.session_state.training_examples = []  # Limpiar ejemplos
@@ -798,30 +767,28 @@ def main():
                                 st.success("🎉 ¡Nuevo modelo creado y disponible!")
                                 st.info("� El modelo aparecerá automáticamente en la lista del sidebar")
 
-                                # BOTÓN PARA ACTUALIZAR LISTA DE MODELOS
-                                col_update1, col_update2 = st.columns([1, 2])
-                                with col_update1:
-                                    if st.button("🔄 Actualizar Lista de Modelos", key="update_models_btn", 
-                                               help="Actualiza la lista de modelos disponibles sin recargar la página"):
-                                        # Forzar recarga de modelos en session_state
-                                        if 'models_cache' in st.session_state:
-                                            del st.session_state['models_cache']
-                                        
-                                        # Obtener lista actualizada
-                                        try:
-                                            response = requests.get(f"{API_BASE_URL}/models/")
-                                            if response.status_code == 200:
-                                                nuevos_modelos = response.json().get("models", [])
-                                                st.session_state['models_cache'] = nuevos_modelos
-                                                st.success(f"Lista actualizada! {len(nuevos_modelos)} modelos disponibles")
-                                                st.rerun()  # Actualizar la interfaz
-                                            else:
-                                                st.error(" Error al obtener modelos actualizados")
-                                        except Exception as e:
-                                            st.error(f" Error de conexión: {str(e)}")
+                                # BOTÓN PARA ACTUALIZAR LISTA DE MODELOS (sin columnas anidadas)
+                                st.info("💡 Usa el botón de abajo para ver tu nuevo modelo en la lista")
                                 
-                                with col_update2:
-                                    st.info(" Usa este botón para ver tu nuevo modelo en la lista")
+                                if st.button("🔄 Actualizar Lista de Modelos", key="update_models_btn", 
+                                           help="Actualiza la lista de modelos disponibles sin recargar la página",
+                                           use_container_width=True):
+                                    # Forzar recarga de modelos en session_state
+                                    if 'models_cache' in st.session_state:
+                                        del st.session_state['models_cache']
+                                    
+                                    # Obtener lista actualizada
+                                    try:
+                                        response = requests.get(f"{API_BASE_URL}/models/")
+                                        if response.status_code == 200:
+                                            nuevos_modelos = response.json().get("models", [])
+                                            st.session_state['models_cache'] = nuevos_modelos
+                                            st.success(f"Lista actualizada! {len(nuevos_modelos)} modelos disponibles")
+                                            st.rerun()  # Actualizar la interfaz
+                                        else:
+                                            st.error("❌ Error al obtener modelos actualizados")
+                                    except Exception as e:
+                                        st.error(f"❌ Error de conexión: {str(e)}")
                                 
                                 # Mostrar modelos disponibles actuales
                                 try:
@@ -953,37 +920,23 @@ def main():
                     if eval_success:
                         st.success(f"✅ Evaluación completada con {selected_dataset['name']}")
                         
-                        # Mostrar información del dataset usado
-                        col_info1, col_info2 = st.columns(2)
-                        with col_info1:
-                            st.metric("📊 Ejemplos evaluados", eval_result.get('n_samples', 0))
-                        with col_info2:
-                            st.metric("📁 Dataset utilizado", selected_dataset['file'])
+                        # Mostrar información del dataset usado (sin columnas anidadas)
+                        st.write(f"**📊 Ejemplos evaluados:** {eval_result.get('n_samples', 0)}")
+                        st.write(f"**📁 Dataset utilizado:** {selected_dataset['file']}")
                         
                         # Destacar el tipo de evaluación
                         st.markdown("**📊 Métricas en Datos de Prueba (Test Set)**")
                         st.caption("⚠️ Estos valores pueden ser diferentes a los del Cross-Validation durante el entrenamiento")
                         
-                        # Mostrar métricas de evaluación
-                        col_eval_a, col_eval_b, col_eval_c = st.columns(3)
-                        
-                        with col_eval_a:
-                            st.metric("🎯 Accuracy", f"{eval_result.get('accuracy', 0):.3f}")
-                        
-                        with col_eval_b:
-                            st.metric("📊 Precision", f"{eval_result.get('precision_macro', 0):.3f}")
-                        
-                        with col_eval_c:
-                            st.metric("🔄 Recall", f"{eval_result.get('recall_macro', 0):.3f}")
+                        # Mostrar métricas de evaluación (sin columnas anidadas)
+                        st.write(f"**🎯 Accuracy:** {eval_result.get('accuracy', 0):.3f}")
+                        st.write(f"**📊 Precision:** {eval_result.get('precision_macro', 0):.3f}")
+                        st.write(f"**🔄 Recall:** {eval_result.get('recall_macro', 0):.3f}")
                         
                         st.write("**F1-Scores:**")
-                        f1_col1, f1_col2, f1_col3 = st.columns(3)
-                        with f1_col1:
-                            st.metric("F1 Macro", f"{eval_result.get('f1_macro', 0):.3f}")
-                        with f1_col2:
-                            st.metric("F1 Micro", f"{eval_result.get('f1_micro', 0):.3f}")
-                        with f1_col3:
-                            st.metric("F1 Weighted", f"{eval_result.get('f1_weighted', 0):.3f}")
+                        st.write(f"• **F1 Macro:** {eval_result.get('f1_macro', 0):.3f}")
+                        st.write(f"• **F1 Micro:** {eval_result.get('f1_micro', 0):.3f}")
+                        st.write(f"• **F1 Weighted:** {eval_result.get('f1_weighted', 0):.3f}")
                     
                     else:
                         st.error(f"❌ Error en evaluación: {eval_result}")
@@ -1046,47 +999,6 @@ def main():
                 st.metric("ODS Únicos", unique_ods)
             
             st.markdown("---")
-            
-            # Análisis por ODS
-            col_chart1, col_chart2 = st.columns(2)
-            
-            with col_chart1:
-                # Gráfico de distribución de predicciones
-                if len(results) > 1:
-                    pred_counts = {}
-                    for result in results:
-                        ods = result['prediccion']
-                        pred_counts[ods] = pred_counts.get(ods, 0) + 1
-                    
-                    # Gráfico de barras con nombres de ODS
-                    ods_names = [f"ODS {k}: {ODS_MAPPING.get(k, 'Desconocido')}" for k in pred_counts.keys()]
-                    
-                    fig = px.bar(
-                        x=ods_names,
-                        y=list(pred_counts.values()),
-                        title="Distribución de Predicciones por ODS",
-                        labels={'x': 'ODS', 'y': 'Cantidad'},
-                        color=list(pred_counts.values()),
-                        color_continuous_scale='viridis'
-                    )
-                    fig.update_layout(showlegend=False, xaxis_tickangle=-45)
-                    st.plotly_chart(fig, use_container_width=True)
-            
-            with col_chart2:
-                # Gráfico de confianza
-                confidences = [r['confianza'] for r in results]
-                fig_conf = px.histogram(
-                    x=confidences,
-                    title="Distribución de Niveles de Confianza",
-                    labels={'x': 'Confianza', 'y': 'Frecuencia'},
-                    nbins=min(10, len(confidences)),
-                    color_discrete_sequence=['#2E86AB']
-                )
-                fig_conf.add_vline(x=0.7, line_dash="dash", line_color="green", 
-                                  annotation_text="Alta Confianza (>70%)")
-                fig_conf.add_vline(x=0.4, line_dash="dash", line_color="orange", 
-                                  annotation_text="Confianza Mínima (>40%)")
-                st.plotly_chart(fig_conf, use_container_width=True)
             
             # Análisis detallado por ODS
             st.subheader("Análisis Detallado por ODS")
